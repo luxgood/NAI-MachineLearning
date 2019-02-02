@@ -50,6 +50,8 @@ public class Network {
 	    }
 	}
     }
+    
+    
 
     /*
      * [A]x[B]= C, Macierz A sklada sie z wag polaczen neuronow, MAcierz B sklada
@@ -81,7 +83,7 @@ public class Network {
 		// zastosowanie funkcji aktywacji dla sumy na tym neuronie
 		outputMatrix[layer][neuron] = sigmoid(sum);
 
-		// pochodna funkcji aktywacji
+		// uproszczona pochodna funkcji aktywacji
 		outputDerivativeMatrix[layer][neuron] = (outputMatrix[layer][neuron]
 			* (1 - outputMatrix[layer][neuron]));
 
@@ -112,7 +114,7 @@ public class Network {
 	    TrainSet batch = set.extractBatch(batchSize);
 
 	    for (int b = 0; b < batchSize; b++) {
-		this.train(batch.getInputFromSet(b), batch.getOutputFromSet(b), 0.2);
+		this.train(batch.getInputFromSet(b), batch.getOutputFromSet(b), 0.05);
 	    }
 	}
     }
@@ -177,6 +179,8 @@ public class Network {
     }
 
     public static void main(String[] args) throws Exception {
+    	
+
 
 	double[] smile1 = loadImageAsDoubleArray(new File("img/smile1.bmp"));
 	double[] smile2 = loadImageAsDoubleArray(new File("img/smile2.bmp"));
@@ -199,7 +203,16 @@ public class Network {
 	double[] notFace5 = loadImageAsDoubleArray(new File("img/notFace5.bmp"));
 	double[] notFace6 = loadImageAsDoubleArray(new File("img/notFace6.bmp"));
 
-	Network net = new Network(smile1.length, 49, 49, 7, 2);
+	//Network net = new Network(smile1.length, 49, 49, 7, 2);
+	int[] layers = new int[args.length];
+	
+	System.out.println(smile1.length);
+	for(int i=0; i<args.length;i++) {
+	 layers[i] = Integer.parseInt(args[i]);
+	 System.out.println(layers[i]);
+	}
+	
+	Network net = new Network(layers);
 
 	TrainSet set = new TrainSet(smile1.length, 2);
 
@@ -232,7 +245,7 @@ public class Network {
 	set.addData(notFace5, new double[] { 0.0, 0.0 });
 	set.addData(notFace6, new double[] { 0.0, 0.0 });
 
-	net.trainThroughWholeSet(set, 300000, 18);
+	net.trainThroughWholeSet(set, 200000, 18);
 
 	for (int i = 0; i < set.size(); i++) {
 	    String name = "";
